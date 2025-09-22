@@ -1,0 +1,63 @@
+# --- Загальні налаштування ---
+general:
+  seed: 42
+  device: "cuda"
+
+# --- Шляхи до даних ---
+data:
+  processed_path: "data/processed/"
+  image_dir: "../data/processed/images/"
+  train_csv: "../data/processed/train.csv"
+  validation_csv: "../data/processed/validation.csv"
+  test_csv: "../data/processed/test.csv"
+
+# --- Параметри обробки даних ---
+preprocessing:
+  image_size: 224
+  mean: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+  text_max_length: 128
+
+# --- Параметри тренування ---
+training:
+  batch_size: 32
+  num_workers: 4
+  epochs: 2
+  learning_rate: 3.0e-5
+  weight_decay: 0.01
+
+# --- Класи ---
+model:
+  classes: ['Negative', 'Neutral', 'Positive']
+  num_classes: 3
+
+  text_encoder:
+    name: "bert-base-multilingual-cased"
+    embedding_dim: 768
+    trainable: false
+
+  image_encoder:
+    name: "resnet50"
+    embedding_dim: 2048
+    trainable: false
+
+  geo_encoder:
+    input_dim: 2
+    hidden_dim: 64
+    embedding_dim: 128
+
+  fusion:
+    projection_dim: 512
+    attention_heads: 8
+    attention_dropout: 0.1
+
+  classifier:
+    hidden_dim: 256
+    dropout: 0.3
+
+xai:
+  llm_composer:
+    model_name: "llama3:8b"
+    api_endpoint: "http://localhost:11434/api/generate"
+  grad_cam_target_layer: "image_encoder.base_model.layer4.2.conv3"
+  shap_background_samples: 10
